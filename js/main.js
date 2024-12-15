@@ -10,44 +10,60 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let botonGenerarPresupuesto = document.getElementById('generar-presupuesto');
     let nombreClienteInput = document.getElementById('nombre-cliente');
+    let telefonoInput = document.getElementById('telefono');  // Campo para el teléfono
     let manoObraInput = document.getElementById('mano-obra');
     let repuestosInput = document.getElementById('repuestos');
     let resultadoDiv = document.getElementById('resultado');
     let historialPresupuestos = document.getElementById('historial-presupuestos').getElementsByTagName('tbody')[0];
 
-    // calcular el total
+    // Calcular el total
     function calcularPresupuesto(manoObra, repuestos) {
         return manoObra + repuestos;
     }
 
-    // generar el presupuesto
+    // Generar el presupuesto
     function generarPresupuesto() {
         let nombreCliente = nombreClienteInput.value.trim();
+        let telefono = telefonoInput.value.trim();  // Capturar el teléfono
         let manoObra = parseFloat(manoObraInput.value.trim());
         let repuestos = parseFloat(repuestosInput.value.trim());
 
-        if (nombreCliente === '' || isNaN(manoObra) || isNaN(repuestos)) {
-            alert('por favor, completa todos los campos.');
+        // Validación de datos
+        if (nombreCliente === '' || telefono === '' || isNaN(manoObra) || isNaN(repuestos)) {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Por favor, completa todos los campos.',
+            });
             return;
         }
 
         let total = calcularPresupuesto(manoObra, repuestos);
         resultadoDiv.innerHTML = '<h3>Presupuesto para: ' + nombreCliente + '</h3>' +
+                                 '<h3>Teléfono: ' + telefono + '</h3>' +  // Mostrar teléfono
                                  '<p>Mano de obra: $' + manoObra + '</p>' +
                                  '<p>Repuestos: $' + repuestos + '</p>' +
                                  '<p><strong>Total: $' + total + '</strong></p>';
 
-        //historial y localStorage
-        guardarPresupuestoEnHistorial(nombreCliente, manoObra, repuestos, total);
-        guardarEnStorage(nombreCliente, manoObra, repuestos, total);
+        // Guardar en historial y localStorage
+        guardarPresupuestoEnHistorial(nombreCliente, telefono, manoObra, repuestos, total);
+        guardarEnStorage(nombreCliente, telefono, manoObra, repuestos, total);
 
         limpiarCampos();
+
+        // Mostrar mensaje de éxito
+        Swal.fire({
+            icon: 'success',
+            title: 'Presupuesto Generado',
+            text: 'El presupuesto se ha generado correctamente.',
+        });
     }
 
-    //presupuesto en el historial visual
-    function guardarPresupuestoEnHistorial(cliente, manoObra, repuestos, total) {
+    // Guardar presupuesto en el historial visual
+    function guardarPresupuestoEnHistorial(cliente, telefono, manoObra, repuestos, total) {
         let nuevaFila = document.createElement('tr');
         nuevaFila.innerHTML = '<td>' + cliente + '</td>' +
+                              '<td>' + telefono + '</td>' +  // Mostrar teléfono
                               '<td>$' + manoObra + '</td>' +
                               '<td>$' + repuestos + '</td>' +
                               '<td>$' + total + '</td>' +
@@ -57,43 +73,60 @@ document.addEventListener('DOMContentLoaded', function() {
                               '</td>';
         historialPresupuestos.appendChild(nuevaFila);
 
-        //editar
+        // Animación para nueva fila
+        nuevaFila.style.opacity = 0;
+        setTimeout(() => nuevaFila.style.opacity = 1, 100);  // Efecto fade-in
+
+        // Editar
         nuevaFila.querySelector('.btn-editar').addEventListener('click', function() {
-            editarPresupuesto(cliente, manoObra, repuestos, total);
+            editarPresupuesto(cliente, telefono, manoObra, repuestos, total);
         });
 
-        // eliminar
+        // Eliminar
         nuevaFila.querySelector('.btn-eliminar').addEventListener('click', function() {
             eliminarPresupuesto(cliente);
         });
     }
 
-    // guarda en localStorage
-    function guardarEnStorage(cliente, manoObra, repuestos, total) {
-        let presupuesto = { cliente: cliente, manoObra: manoObra, repuestos: repuestos, total: total };
+    // Guardar en localStorage
+    function guardarEnStorage(cliente, telefono, manoObra, repuestos, total) {
+        let presupuesto = { cliente: cliente, telefono: telefono, manoObra: manoObra, repuestos: repuestos, total: total };
         let historial = JSON.parse(localStorage.getItem('historialPresupuestos')) || [];
         historial.push(presupuesto);
         localStorage.setItem('historialPresupuestos', JSON.stringify(historial));
     }
 
-    // carga historial desde localStorage
+    // Cargar historial desde localStorage
     function cargarHistorialDesdeStorage() {
         let historial = JSON.parse(localStorage.getItem('historialPresupuestos')) || [];
         for (let i = 0; i < historial.length; i++) {
             let presupuesto = historial[i];
-            guardarPresupuestoEnHistorial(presupuesto.cliente, presupuesto.manoObra, presupuesto.repuestos, presupuesto.total);
+            guardarPresupuestoEnHistorial(presupuesto.cliente, presupuesto.telefono, presupuesto.manoObra, presupuesto.repuestos, presupuesto.total);
         }
     }
 
-    // edita presupuesto
-    function editarPresupuesto(cliente, manoObra, repuestos, total) {
+    // Cargar datos desde un archivo JSON
+    function cargarDatosDesdeJSON() {
+        fetch('presupuestos.json')  
+            .then(response => response.json())  
+            .then(data => {
+                data.forEach(presupuesto => {
+                    guardarPresupuestoEnHistorial(presupuesto.cliente, presupuesto.telefono, presupuesto.manoObra, presupuesto.repuestos, presupuesto.total);
+                });
+            })
+            .catch(error => console.error('Error al cargar los datos:', error));
+    }
+
+    // Editar presupuesto
+    function editarPresupuesto(cliente, telefono, manoObra, repuestos, total) {
         nombreClienteInput.value = cliente;
+        telefonoInput.value = telefono;
         manoObraInput.value = manoObra;
         repuestosInput.value = repuestos;
         eliminarPresupuesto(cliente);
     }
 
-    // elimina presupuesto
+    // Eliminar presupuesto
     function eliminarPresupuesto(cliente) {
         let filas = historialPresupuestos.getElementsByTagName('tr');
         for (let i = 0; i < filas.length; i++) {
@@ -109,13 +142,16 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('historialPresupuestos', JSON.stringify(historial));
     }
 
-    // limpia campos de entrada
+    // Limpiar campos de entrada
     function limpiarCampos() {
         nombreClienteInput.value = '';
+        telefonoInput.value = ''; 
         manoObraInput.value = '';
         repuestosInput.value = '';
     }
 
+    // cargar datos 
+    cargarDatosDesdeJSON();
     cargarHistorialDesdeStorage();
     botonGenerarPresupuesto.addEventListener('click', generarPresupuesto);
 });

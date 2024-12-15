@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Presupuesto Scolaro</title>
     <link rel="stylesheet" href="css/estilo.css"> 
+    <!-- SweetAlert CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 <body>
     <!-- ingreso de datos de los clientes -->
@@ -13,6 +16,9 @@
         
         <label for="nombre-cliente">Nombre del Cliente:</label>
         <input type="text" id="nombre-cliente" placeholder="cliente">
+
+        <label for="Telefono">N° Teléfono:</label>
+        <input type="number" id="telefono" placeholder="Teléfono del cliente">
         
         <label for="mano-obra">Costo de Mano de Obra:</label>
         <input type="number" id="mano-obra" placeholder="mano de obra">
@@ -32,6 +38,7 @@
         <thead>
             <tr>
                 <th>Cliente</th>
+                <th>Teléfono</th>
                 <th>Mano de obra</th>
                 <th>Repuestos</th>
                 <th>Total</th>

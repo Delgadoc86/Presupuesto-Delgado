@@ -1,0 +1,23 @@
+[
+    {
+        "cliente": "Juan Pérez",
+        "telefono": 1526745239,
+        "manoObra": 1500,
+        "repuestos": 800,
+        "total": 2300
+    },
+    {
+        "cliente": "Ana García",
+        "telefono": 152674125,
+        "manoObra": 2000,
+        "repuestos": 1000,
+        "total": 3000
+    },
+    {
+        "cliente": "Luis Martínez",
+        "telefono": 15262345239,
+        "manoObra": 1200,
+        "repuestos": 500,
+        "total": 1700
+    }
+]
