@@ -8,7 +8,7 @@ body {
     line-height: 1.6;
 }
 
-/* Formulario principal */
+
 .formulario-principal {
     display: flex;
     flex-direction: column;
@@ -21,7 +21,7 @@ body {
     margin-right: auto;
 }
 
-/* Títulos */
+
 h1 {
     color: #333;
     text-align: center;
@@ -29,7 +29,7 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* Entradas y botones */
+
 input, button {
     padding: 12px;
     margin: 8px 0;
@@ -40,13 +40,13 @@ input, button {
     box-sizing: border-box;
 }
 
-/* Foco en los campos */
+
 input:focus, button:focus {
     border-color: #007bff;
     outline: none;
 }
 
-/* Estilo de los botones */
+
 button {
     cursor: pointer;
     background-color: #007bff;
@@ -63,7 +63,7 @@ button:active {
     background-color: #004085;
 }
 
-/* Resultado */
+
 .resultado {
     margin-top: 20px;
     font-size: 1.2rem;
@@ -76,7 +76,7 @@ button:active {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Tabla del historial */
+
 #historial-presupuestos {
     width: 100%;
     border-collapse: collapse;
@@ -103,7 +103,7 @@ button:active {
     background-color: #f1f1f1;
 }
 
-/* Estilo para los botones en la tabla */
+
 #historial-presupuestos .btn-editar, #historial-presupuestos .btn-eliminar {
     padding: 8px 16px;
     font-size: 1rem;
